@@ -2,13 +2,13 @@ package br.ifrn.edu.jeferson.ecommerce.controller;
 
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ClienteRequestDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ClienteResponseDTO;
+import br.ifrn.edu.jeferson.ecommerce.domain.dtos.EnderecoDTO;
 import br.ifrn.edu.jeferson.ecommerce.service.ClienteService;
+import br.ifrn.edu.jeferson.ecommerce.service.EnderecoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +20,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private EnderecoService enderecoService;
 
     @Operation(summary = "Criar cliente")
     @PostMapping
