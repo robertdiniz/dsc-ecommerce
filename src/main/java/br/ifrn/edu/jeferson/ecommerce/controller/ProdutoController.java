@@ -35,7 +35,7 @@ public class ProdutoController {
 
     @Operation(summary = "Listar produtos.")
     @GetMapping
-    public ResponseEntity<Page<ProdutoDTO>> listar(
+    public Page<Produto> listar(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) BigDecimal precoMin,
             @RequestParam(required = false) BigDecimal precoMax,
@@ -44,16 +44,7 @@ public class ProdutoController {
             @RequestParam(required = false) Integer pageSize
             ){
 
-        Page<ProdutoDTO> produtoDTOS = produtoService.listar(
-                nome,
-                precoMin,
-                precoMax,
-                estoque,
-                pageNumber,
-                pageSize
-        );
-
-        return ResponseEntity.ok(produtoDTOS);
+        return produtoService.listar(nome, precoMin, precoMax, estoque, pageNumber, pageSize);
     }
 
     @Operation(summary = "Buscar produto.")
@@ -71,5 +62,19 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.atualizarProduto(id, produtoDTO));
     }
 
+    @Operation(summary = "Deletar produto.")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id){
+        produtoService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 
+    @Operation(summary = "Atualizar estoque.")
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProdutoDTO> atualizarEstoque(
+            @PathVariable Long id,
+            @RequestBody Integer estoque
+    ){
+        return ResponseEntity.ok(produtoService.atualizarEstoque(id, estoque));
+    }
 }

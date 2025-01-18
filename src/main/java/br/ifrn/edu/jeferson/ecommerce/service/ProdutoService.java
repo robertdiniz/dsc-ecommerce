@@ -1,7 +1,9 @@
 package br.ifrn.edu.jeferson.ecommerce.service;
 
+import br.ifrn.edu.jeferson.ecommerce.domain.Cliente;
 import br.ifrn.edu.jeferson.ecommerce.domain.Produto;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ProdutoDTO;
+import br.ifrn.edu.jeferson.ecommerce.domain.specificacion.ProdutoSpecification;
 import br.ifrn.edu.jeferson.ecommerce.exception.BusinessException;
 import br.ifrn.edu.jeferson.ecommerce.mapper.ProdutoMapper;
 import br.ifrn.edu.jeferson.ecommerce.repository.ProdutoRepository;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,7 +34,7 @@ public class ProdutoService {
         return produtoMapper.toDTO(produto);
     }
 
-    public Page<ProdutoDTO> listar(
+    public Page<Produto> listar(
             String nome,
             BigDecimal precoMin,
             BigDecimal precoMax,
@@ -49,16 +52,12 @@ public class ProdutoService {
 
         Pageable page = PageRequest.of(pageNumber, pageSize);
 
-        if (nome != null || precoMin != null || precoMax != null || estoque != null) {
-            System.out.println("Está entrando aqui!");
-            System.out.println(nome);
-            Page<Produto> produtos = produtoRepository.findByNomeContainingAndPrecoBetweenAndEstoqueGreaterThanEqual(
-                    nome, precoMin, precoMax, estoque, page);
-            return produtos.map(produtoMapper::toDTO);
-        }
+        Specification<Produto> spec = Specification.where(ProdutoSpecification.nomeContains(nome))
+                .and(ProdutoSpecification.precoMax(precoMax))
+                .and(ProdutoSpecification.precoMin(precoMin))
+                .and(ProdutoSpecification.estoque(estoque));
 
-        Page<Produto> produtos = produtoRepository.findAll(page);
-        return produtos.map(produtoMapper::toDTO);
+        return produtoRepository.findAll(spec, page);
     }
 
     public ProdutoDTO buscarPorId(Long id){
@@ -85,6 +84,22 @@ public class ProdutoService {
         return produtoMapper.toDTO(produto);
     }
 
+    public void deletar(Long id){
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Produto não encontrado com o ID: " + id));
 
+        produtoRepository.delete(produto);
+    }
+
+    public ProdutoDTO atualizarEstoque(Long id, Integer estoque){
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Produto não encontrado com o ID: " + id));
+
+        produto.setEstoque(estoque);
+
+        produtoRepository.save(produto);
+
+        return produtoMapper.toDTO(produto);
+    }
 
 }
