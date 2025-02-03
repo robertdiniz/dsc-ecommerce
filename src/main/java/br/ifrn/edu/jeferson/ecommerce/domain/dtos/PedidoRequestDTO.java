@@ -1,13 +1,12 @@
 package br.ifrn.edu.jeferson.ecommerce.domain.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -16,9 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @Schema(description = "DTO para requisição de pedidos")
 public class PedidoRequestDTO {
-    private BigDecimal valorTotal;
     private String statusPedido;
     private Long clienteId;
-    private List<ItemPedidoResponseDTO> itens;
+    @Min(value = 1, message = "Pedido deve ter no mínimo um item.")
+    private List<ItemPedidoRequestDTO> itens;
 }
 

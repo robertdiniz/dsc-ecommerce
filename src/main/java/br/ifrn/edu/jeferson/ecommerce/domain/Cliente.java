@@ -31,5 +31,11 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos = new ArrayList<>();
 
+    @PreRemove
+    private void verificarPedidosAntesDeRemover() {
+        if (!pedidos.isEmpty()) {
+            throw new IllegalStateException("Não é possível remover o cliente, pois ele possui pedidos.");
+        }
+    }
 
 }

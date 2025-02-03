@@ -4,8 +4,10 @@ import br.ifrn.edu.jeferson.ecommerce.domain.Cliente;
 import br.ifrn.edu.jeferson.ecommerce.domain.Endereco;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ClienteRequestDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ClienteResponseDTO;
+import br.ifrn.edu.jeferson.ecommerce.domain.dtos.EnderecoDTO;
 import br.ifrn.edu.jeferson.ecommerce.exception.BusinessException;
 import br.ifrn.edu.jeferson.ecommerce.mapper.ClienteMapper;
+import br.ifrn.edu.jeferson.ecommerce.mapper.EnderecoMapper;
 import br.ifrn.edu.jeferson.ecommerce.repository.ClienteRepository;
 import br.ifrn.edu.jeferson.ecommerce.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class ClienteService {
 
     @Autowired
     private EnderecoRepository enderecoRepository;
+
+    @Autowired
+    private EnderecoMapper enderecoMapper;
 
 
     public Page<ClienteResponseDTO> obterClientes(Pageable pageable){
@@ -89,6 +94,50 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Cliente não encontrado com o ID: " + id));
 
+        if(!cliente.getPedidos().isEmpty()){
+            throw new BusinessException("Não é possível remover o cliente, pois ele possui pedidos.");
+        }
+
         clienteRepository.delete(cliente);
     }
+
+    public EnderecoDTO cadastrarEndereco(Long clienteId, EnderecoDTO endereco) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        Endereco enderecoObj = enderecoMapper.toEntity(endereco);
+        enderecoObj.setCliente(cliente);
+
+        enderecoRepository.save(enderecoObj);
+
+        return enderecoMapper.toDTO(enderecoObj);
+    }
+
+    public EnderecoDTO obterEndereco(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        return enderecoMapper.toDTO(cliente.getEndereco());
+    }
+
+    public EnderecoDTO atualizarEndereco(Long clienteId, EnderecoDTO enderecoDTO) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        Endereco endereco = cliente.getEndereco();
+        enderecoMapper.updateEntityFromDTO(enderecoDTO, endereco);
+        enderecoRepository.save(endereco);
+
+        return enderecoMapper.toDTO(endereco);
+    }
+
+    public void removerEndereco(Long clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        Endereco endereco = cliente.getEndereco();
+        if (endereco != null) {
+            enderecoRepository.delete(endereco);
+        }
+    }
+
 }

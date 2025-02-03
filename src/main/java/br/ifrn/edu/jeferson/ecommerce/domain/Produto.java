@@ -1,5 +1,6 @@
 package br.ifrn.edu.jeferson.ecommerce.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Produto {
     @JoinTable(name = "produto_categoria",
             joinColumns = @JoinColumn(name = "produto_id"),
             inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+    @JsonManagedReference
     private List<Categoria> categorias = new ArrayList<>();
 
 }

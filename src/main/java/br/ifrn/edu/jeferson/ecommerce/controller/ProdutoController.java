@@ -6,6 +6,7 @@ import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ProdutoDTO;
 import br.ifrn.edu.jeferson.ecommerce.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class ProdutoController {
 
     @Operation(summary = "Criar produto")
     @PostMapping
-    public ResponseEntity<ProdutoDTO> salvar(@RequestBody ProdutoDTO produtoDTO){
+    public ResponseEntity<ProdutoDTO> salvar(@Valid @RequestBody ProdutoDTO produtoDTO){
 
         ProdutoDTO produtoResponse = produtoService.salvar(produtoDTO);
 
@@ -58,7 +59,7 @@ public class ProdutoController {
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoDTO> atualizarProduto(
             @PathVariable Long id,
-            @RequestBody ProdutoDTO produtoDTO
+            @Valid @RequestBody ProdutoDTO produtoDTO
     ){
         return ResponseEntity.ok(produtoService.atualizarProduto(id, produtoDTO));
     }
@@ -73,14 +74,14 @@ public class ProdutoController {
     @Operation(summary = "Atualizar estoque.")
     @PatchMapping("/{id}/estoque")
     public ResponseEntity<Void> atualizarEstoque(
-            @PathVariable Long id,
+            @Valid @PathVariable Long id,
             @RequestBody Integer estoque
     ){
         produtoService.atualizarEstoque(id, estoque);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Atualizar estoque.")
+    @Operation(summary = "Listar produtos por categoria.")
     @GetMapping("/categoria/{categoriaId}")
     public ResponseEntity<List<Produto>> listarProdutosPorCategoria(
             @PathVariable Long categoriaId
@@ -88,4 +89,5 @@ public class ProdutoController {
         List<Produto> produtos = produtoService.listarProdutosPorCategoria(categoriaId);
         return ResponseEntity.ok(produtos);
     }
+
 }

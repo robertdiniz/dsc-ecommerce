@@ -22,5 +22,4 @@ public class PedidoResponseDTO {
     private String statusPedido;
     private Long clienteId;
     private List<ItemPedidoResponseDTO> itens;
-
 }

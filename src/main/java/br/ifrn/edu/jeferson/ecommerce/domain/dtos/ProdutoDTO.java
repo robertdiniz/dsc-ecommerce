@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class ProdutoDTO {
     private String descricao;
 
     @Schema(description = "Descrição do produto", example = "Mouse com FIO, possui RGB...")
-    @NotNull(message = "Descrição do produto é obrigatório.")
+    @Positive
     private BigDecimal preco;
 
     @Schema(description = "Estoque do produto", example = "5")

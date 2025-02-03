@@ -95,10 +95,7 @@ public class ProdutoService {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado com o ID: " + id));
         if (estoque < 0) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "O estoque não pode ser negativo"
-            );
+            throw new BusinessException("Estoque não pode ser negativo!");
         }
         produto.setEstoque(estoque);
         produtoRepository.save(produto);

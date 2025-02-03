@@ -1,5 +1,6 @@
 package br.ifrn.edu.jeferson.ecommerce.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class Categoria {
     private String descricao;
 
     @ManyToMany(mappedBy = "categorias")
+    @JsonBackReference
     private List<Produto> produtos = new ArrayList<>();
 
 }

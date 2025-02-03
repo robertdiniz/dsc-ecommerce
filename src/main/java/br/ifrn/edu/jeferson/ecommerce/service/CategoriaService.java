@@ -47,10 +47,14 @@ public class CategoriaService {
     }
 
     public void deletar(Long id) {
-        if (!categoriaRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Categoria não encontrada");
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+
+        if (!categoria.getProdutos().isEmpty()) {
+            throw new BusinessException("Não é possível remover a categoria, pois há produtos associados a ela.");
         }
-        categoriaRepository.deleteById(id);
+
+        categoriaRepository.delete(categoria);
     }
 
     public CategoriaResponseDTO atualizar(Long id, CategoriaRequestDTO categoriaDto) {
