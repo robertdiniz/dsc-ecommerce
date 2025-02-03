@@ -1,6 +1,7 @@
 package br.ifrn.edu.jeferson.ecommerce.controller;
 
 import br.ifrn.edu.jeferson.ecommerce.domain.Produto;
+import br.ifrn.edu.jeferson.ecommerce.domain.dtos.AtualizarEstoqueDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ProdutoDTO;
 import br.ifrn.edu.jeferson.ecommerce.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,11 +71,21 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Atualizar estoque.")
-    @PatchMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> atualizarEstoque(
+    @PatchMapping("/{id}/estoque")
+    public ResponseEntity<Void> atualizarEstoque(
             @PathVariable Long id,
             @RequestBody Integer estoque
     ){
-        return ResponseEntity.ok(produtoService.atualizarEstoque(id, estoque));
+        produtoService.atualizarEstoque(id, estoque);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Atualizar estoque.")
+    @GetMapping("/categoria/{categoriaId}")
+    public ResponseEntity<List<Produto>> listarProdutosPorCategoria(
+            @PathVariable Long categoriaId
+    ){
+        List<Produto> produtos = produtoService.listarProdutosPorCategoria(categoriaId);
+        return ResponseEntity.ok(produtos);
     }
 }

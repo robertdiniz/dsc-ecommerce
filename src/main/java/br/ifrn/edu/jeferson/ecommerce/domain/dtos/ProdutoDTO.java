@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,4 +37,7 @@ public class ProdutoDTO {
     @Schema(description = "Estoque do produto", example = "5")
     @Min(value = 0, message = "O estoque não pode ser negativo.")
     private Integer estoque;
+
+    @Schema(description = "IDs das categorias associadas ao produto")
+    private List<Long> categorias;
 }

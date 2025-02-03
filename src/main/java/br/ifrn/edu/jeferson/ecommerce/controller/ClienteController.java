@@ -8,6 +8,8 @@ import br.ifrn.edu.jeferson.ecommerce.service.EnderecoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +34,8 @@ public class ClienteController {
 
     @Operation(summary = "Obter todos os clientes")
     @GetMapping
-    public ResponseEntity<List<ClienteResponseDTO>> obterTodos() {
-        return ResponseEntity.ok(clienteService.obterClientes());
+    public Page<ClienteResponseDTO> obterClientes(Pageable pageable) {
+        return clienteService.obterClientes(pageable);
     }
 
     @Operation(summary = "Obter um cliente")

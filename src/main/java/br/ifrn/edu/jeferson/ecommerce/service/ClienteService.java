@@ -9,6 +9,8 @@ import br.ifrn.edu.jeferson.ecommerce.mapper.ClienteMapper;
 import br.ifrn.edu.jeferson.ecommerce.repository.ClienteRepository;
 import br.ifrn.edu.jeferson.ecommerce.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,15 +28,15 @@ public class ClienteService {
     private EnderecoRepository enderecoRepository;
 
 
-    public List<ClienteResponseDTO> obterClientes(){
-        List<Cliente> clientes = clienteRepository.findAll();
-        return clienteMapper.toDTOList(clientes);
+    public Page<ClienteResponseDTO> obterClientes(Pageable pageable){
+        Page<Cliente> clientes = clienteRepository.findAll(pageable);
+        return clientes.map(clienteMapper::toDTO);
     };
 
     public ClienteResponseDTO salvar(ClienteRequestDTO clienteDTO){
         Cliente cliente = clienteMapper.toEntity(clienteDTO);
 
-        if(clienteRepository.existsByCpf(cliente.getNome())){
+        if(clienteRepository.existsByCpf(cliente.getCpf())){
             throw new BusinessException("Já existe um cliente com esse CPF");
         }
 

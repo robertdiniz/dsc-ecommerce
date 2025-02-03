@@ -2,6 +2,7 @@ package br.ifrn.edu.jeferson.ecommerce.service;
 
 import br.ifrn.edu.jeferson.ecommerce.domain.Cliente;
 import br.ifrn.edu.jeferson.ecommerce.domain.Produto;
+import br.ifrn.edu.jeferson.ecommerce.domain.dtos.AtualizarEstoqueDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ProdutoDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.specificacion.ProdutoSpecification;
 import br.ifrn.edu.jeferson.ecommerce.exception.BusinessException;
@@ -12,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -71,16 +74,13 @@ public class ProdutoService {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado com o ID: " + id));
 
-        // Atualiza os campos permitidos
         produto.setNome(produtoDTO.getNome());
         produto.setDescricao(produtoDTO.getDescricao());
         produto.setPreco(produtoDTO.getPreco());
         produto.setEstoque(produtoDTO.getEstoque());
 
-        // Salva a entidade atualizada no banco de dados
         produtoRepository.save(produto);
 
-        // Retorna o DTO atualizado
         return produtoMapper.toDTO(produto);
     }
 
@@ -91,15 +91,21 @@ public class ProdutoService {
         produtoRepository.delete(produto);
     }
 
-    public ProdutoDTO atualizarEstoque(Long id, Integer estoque){
+    public void atualizarEstoque(Long id, Integer estoque){
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado com o ID: " + id));
-
+        if (estoque < 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "O estoque não pode ser negativo"
+            );
+        }
         produto.setEstoque(estoque);
-
         produtoRepository.save(produto);
+    }
 
-        return produtoMapper.toDTO(produto);
+    public List<Produto> listarProdutosPorCategoria(Long categoriaId){
+        return produtoRepository.findByCategorias_Id(categoriaId);
     }
 
 }
