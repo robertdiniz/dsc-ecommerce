@@ -31,6 +31,13 @@ public class CategoriaController {
         return ResponseEntity.ok(categoriaService.lista());
     }
 
+    @Operation(summary = "Buscar uma nova categoria")
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoriaResponseDTO> buscarCategoria(@PathVariable Long id) {
+        return ResponseEntity.ok(categoriaService.buscarPorId(id));
+    }
+
+
     @Operation(summary = "Deletar uma nova categoria")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
@@ -40,8 +47,29 @@ public class CategoriaController {
 
     @Operation(summary = "Atualizar uma nova categoria")
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> atualizar(@PathVariable Long id, @RequestBody CategoriaRequestDTO categoriaDto) {
+    public ResponseEntity<CategoriaResponseDTO> atualizar(
+            @PathVariable Long id,
+            @RequestBody CategoriaRequestDTO categoriaDto
+    ) {
         return ResponseEntity.ok(categoriaService.atualizar(id, categoriaDto));
+    }
+
+    @PutMapping("/{categoriaId}/produtos/{produtoId}")
+    public ResponseEntity<Void> associarProdutoACategoria(
+            @PathVariable Long categoriaId,
+            @PathVariable Long produtoId
+    ) {
+        categoriaService.associarCategorias(categoriaId, produtoId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{categoriaId}/produtos/{produtoId}")
+    public ResponseEntity<Void> desassociarProdutoACategoria(
+            @PathVariable Long categoriaId,
+            @PathVariable Long produtoId
+    ) {
+        categoriaService.desassociarCategorias(categoriaId, produtoId);
+        return ResponseEntity.noContent().build();
     }
 
 }
