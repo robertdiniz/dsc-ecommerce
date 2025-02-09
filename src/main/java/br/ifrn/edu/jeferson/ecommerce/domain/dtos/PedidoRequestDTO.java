@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Schema(description = "DTO para requisição de pedidos")
 public class PedidoRequestDTO {
-    private String statusPedido;
     private Long clienteId;
     @Min(value = 1, message = "Pedido deve ter no mínimo um item.")
     private List<ItemPedidoRequestDTO> itens;

@@ -51,8 +51,12 @@ public class PedidoService {
     @Transactional
     public PedidoResponseDTO criarPedido(PedidoRequestDTO pedidoRequestDTO) {
 
+        var cliente = clienteRepository.findById(pedidoRequestDTO.getClienteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado!"));
+
         Pedido pedido = new Pedido();
         pedido.setDataPedido(LocalDateTime.now());
+        pedido.setCliente(cliente);
 
         BigDecimal valorTotal = BigDecimal.ZERO;
         List<ItemPedido> itens = new ArrayList<>();
@@ -84,9 +88,10 @@ public class PedidoService {
         }
 
         pedido.setValorTotal(valorTotal);
-        pedido.setItens(itens);  // A lista de itens é associada ao pedido
+        pedido.setItens(itens);
+        pedido.setStatusPedido(StatusPedido.AGUARDANDO);
 
-        // Salvando o pedido
+        itemPedidoRepository.saveAll(itens);
         Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
         return pedidoMapper.toDTO(pedidoSalvo);
@@ -94,6 +99,7 @@ public class PedidoService {
 
     public Page<PedidoResponseDTO> listarPedidos(Pageable pageable) {
         Page<Pedido> pedidos = pedidoRepository.findAll(pageable);
+        pedidos.forEach(p -> System.out.println("Pedido ID: " + p.getId() + " | Itens: " + p.getItens().size()));
         return pedidos.map(pedidoMapper::toDTO);
     }
 
