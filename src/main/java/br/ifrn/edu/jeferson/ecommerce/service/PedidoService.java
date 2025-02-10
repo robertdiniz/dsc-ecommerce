@@ -16,6 +16,7 @@ import br.ifrn.edu.jeferson.ecommerce.repository.ClienteRepository;
 import br.ifrn.edu.jeferson.ecommerce.repository.ItemPedidoRepository;
 import br.ifrn.edu.jeferson.ecommerce.repository.PedidoRepository;
 import br.ifrn.edu.jeferson.ecommerce.repository.ProdutoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class PedidoService {
 
     @Autowired
@@ -99,7 +101,6 @@ public class PedidoService {
 
     public Page<PedidoResponseDTO> listarPedidos(Pageable pageable) {
         Page<Pedido> pedidos = pedidoRepository.findAll(pageable);
-        pedidos.forEach(p -> System.out.println("Pedido ID: " + p.getId() + " | Itens: " + p.getItens().size()));
         return pedidos.map(pedidoMapper::toDTO);
     }
 

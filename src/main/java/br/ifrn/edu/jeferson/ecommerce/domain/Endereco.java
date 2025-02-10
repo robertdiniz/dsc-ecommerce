@@ -1,6 +1,9 @@
 package br.ifrn.edu.jeferson.ecommerce.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +25,6 @@ public class Endereco {
     private String cep;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cliente_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Cliente cliente;
 }
