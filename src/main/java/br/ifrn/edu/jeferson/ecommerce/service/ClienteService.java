@@ -16,10 +16,10 @@ import br.ifrn.edu.jeferson.ecommerce.repository.EnderecoRepository;
 import br.ifrn.edu.jeferson.ecommerce.repository.PedidoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,6 +45,7 @@ public class ClienteService {
     @Autowired
     private PedidoMapper pedidoMapper;
 
+    @Cacheable("clients")
     public Page<ClienteResponseDTO> obterClientes(Pageable pageable){
         log.info("Obtendo lista paginada de clientes");
         Page<Cliente> clientes = clienteRepository.findAll(pageable);

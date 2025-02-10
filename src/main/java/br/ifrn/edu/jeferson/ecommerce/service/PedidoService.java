@@ -1,11 +1,9 @@
 package br.ifrn.edu.jeferson.ecommerce.service;
 
-import br.ifrn.edu.jeferson.ecommerce.domain.Cliente;
 import br.ifrn.edu.jeferson.ecommerce.domain.ItemPedido;
 import br.ifrn.edu.jeferson.ecommerce.domain.Pedido;
 import br.ifrn.edu.jeferson.ecommerce.domain.Produto;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ItemPedidoRequestDTO;
-import br.ifrn.edu.jeferson.ecommerce.domain.dtos.ItemPedidoResponseDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.PedidoRequestDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.dtos.PedidoResponseDTO;
 import br.ifrn.edu.jeferson.ecommerce.domain.enums.StatusPedido;

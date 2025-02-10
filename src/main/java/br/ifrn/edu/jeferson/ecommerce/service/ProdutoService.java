@@ -9,6 +9,7 @@ import br.ifrn.edu.jeferson.ecommerce.exception.BusinessException;
 import br.ifrn.edu.jeferson.ecommerce.mapper.ProdutoMapper;
 import br.ifrn.edu.jeferson.ecommerce.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ public class ProdutoService {
         return produtoMapper.toDTO(produto);
     }
 
+    @Cacheable("products")
     public Page<Produto> listar(
             String nome,
             BigDecimal precoMin,
